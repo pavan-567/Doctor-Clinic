@@ -1,0 +1,137 @@
+{% extends 'base.html' %}
+
+
+{% block css %}
+    <style>
+      .errorlist {
+    list-style: none;
+    } 
+    .card-body span {
+      font-weight: 500;
+      color: red;
+    }
+    </style>
+{% endblock css %}
+  
+
+
+{% block base %}
+{% load static %}
+
+<div class="d-flex flex-column align-items-center mb-2">
+  <div class="card mb-2 mt-5 overflow-hidden" style="max-width: 800px; box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px, rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 56px; background: rgba(255, 255, 255, 0.8);">
+    <div class="row g-0">
+      <div class="col-md-5">
+        <img src="
+        {% static 'auth/register.jpg' %}
+        " class="img-fluid rounded-start object-fit-cover" alt="..." style="height: 100%;">
+      </div>
+      <div class="col-md-7">
+        <div class="card-header fs-2 fw-bold text-center">
+          User Registration
+        </div>
+        <div class="card-body">
+          <form method="POST" novalidate>
+            {% csrf_token %}
+            <div class="mb-2">
+              <label for="username" class="form-label">Username</label>
+              <input type="text" class="form-control" 
+              id="username"
+              name="username"
+              placeholder="Enter Username" required>
+              <div class="invalid-feedback">Invalid  username</div>
+              <span>{{form.username.errors}}</span>
+            </div>
+            <div class="mb-2">
+              <label for="email" class="form-label">Email</label>
+              <input type="email" 
+              name="email"
+              class="form-control" id="email"
+              placeholder="Enter Email" required>
+              <div class="invalid-feedback">Invalid Email</div>
+              <span>{{form.email.errors}}</span>
+              
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="mb-2">
+                  <label for="fName">First Name</label>
+                  <input type="text" id="fName" 
+                  name="first_name"
+                  class="form-control"
+                  placeholder="Enter First Name" required />
+                  <div class="invalid-feedback">Invalid First Name</div>
+                  <span>{{form.first_name.errors}}</span>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-2">
+                  <label for="lName">Last Name</label>
+                  <input type="text" placeholder="Enter Last Name" 
+                  name="last_name"
+                  class="form-control"
+                  id="lName" required />
+                  <div class="invalid-feedback">Invalid Last Name</div>
+                  <span>{{form.last_name.errors}}</span>
+                </div>
+              </div>
+            </div>
+
+            
+           
+            
+            <div class="mb-2">
+              <label for="gender">Gender</label>
+              <select class="form-select" name="gender" id="gender">
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+              </select>
+              <div class="invalid-feedback">Invalid Gender</div>
+              <span>{{form.gender.errors}}</span>
+            </div>
+
+            <div class="mb-2">
+              <label for="pass">Password</label>
+              <input type="password" 
+              name="password1"
+
+              class="form-control"
+              placeholder="Enter Password" id="pass" required />
+              <div class="invalid-feedback">Invalid Password</div>
+              <span>{{form.password1.errors}}</span>
+            </div>
+
+            <div class="mb-2">
+              <label for="cPass">Confirm Password</label>
+              <input type="password" 
+              name="password2"
+              placeholder="Enter Conf Password"
+              class="form-control" id="cPass" required />
+              <div class="invalid-feedback">Password's Doesn't Match</div>
+              <span>{{form.password2.errors}}</span>
+            </div>
+
+            <div class="mb-2">
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+          </form>
+          <div>Already a User? <a href="{% url 'login' %}">Login</a></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+  
+  {% endblock %}
+  
+  {% block script %}
+    <script>
+      const form = document.querySelector("form");
+        form.addEventListener('submit', function (e) {
+          if(!form.checkValidity()) // Browser Function Which Checks If Form Is Valid
+            e.preventDefault()
+          form.classList.add('was-validated')
+        })
+    </script>
+  {% endblock script %}

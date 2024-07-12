@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/about.css' %}">
+{% endblock css %}
+
+{% block base %}
+   <div class="d-flex justify-content-center mt-5">
+      <div class="card mb-3" style="box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;">
+         <div class="row">
+           <div class="col-lg-4">
+             <img src="{% static 'about/about.jpg' %}" style="height: 100%;" class="img-fluid rounded-start object-fit-cover" alt="...">
+           </div>
+           <div class="col-lg-8">
+             <div class="card-body my-3">
+               <h5 class="card-title fs-1 fw-bold my-3">About Us</h5>
+               <hr>
+               <div class="card-text fs-5 d-flex flex-column gap-3">
+                  <div>
+                     Welcome to MLRIT Clinic! We are a leading healthcare provider dedicated to providing quality medical services to our patients. Our clinic is staffed with experienced and compassionate healthcare professionals who strive to deliver personalized care to each individual.
+                  </div>
+                  <hr>
+                  <div>
+                     At MLRIT Name, we offer a wide range of medical services, including general check-ups, diagnostic tests, vaccinations, and specialized treatments. Our state-of-the-art facilities are equipped with the latest medical technology to ensure accurate diagnosis and effective treatment.
+                  </div>
+                  <hr>
+                  <div>
+                     Our mission is to promote health and well-being in our community by providing accessible and affordable healthcare services. We are committed to delivering excellence in patient care and maintaining the highest standards of medical practice.
+                  </div>
+               </div>
+             </div>
+           </div>
+         </div>
+       </div>
+   </div>
+   <div class="mx-5 my-3">
+      <section id="doctors">
+          <div class="container">
+            <div class="doctors__description">
+              <h1>Our Doctors</h1>
+              <div>
+                Our List Of Available Top Doctors
+              </div>
+            </div>
+            <div class="doctors__list">
+              
+              {% for doctor in doctors %}
+              <div class="doctor">
+                <img
+                  src="{{doctor.user.profile.image.url}}"
+                  alt=""
+                />
+                
+                <div class="doctor__info">
+                  <h1>Dr.{{doctor.user.username|capfirst}}</h1>
+                  <p>{{doctor.experience}} Years Experience</p>
+
+                  <button><a href="{% url 'doctor-profile' doctor.id %}">More Details</a></button>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+        </section>
+  </div>
+{% endblock base %}
+    

@@ -1,0 +1,17 @@
+.card {
+    min-width: 500px;
+
+    @media screen and (max-width: 778px) {
+        min-width: auto;
+    }
+}
+
+.url-btns {
+    display: flex;
+    gap: 3px;
+
+    @media screen and (max-width: 778px) {
+        display: block;
+       
+    }
+}

@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/doctor.css' %}">
+{% endblock css %}
+  
+
+{% block base %}
+    <div class="d-flex flex-column gap-3 align-items-center my-5">
+        <div class="fs-3 fw-bold text-uppercase" style="text-decoration: underline;">Doctor Detailed Profile</div>
+        <div class="card mb-3" style="max-width: 700px; box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;">
+            <div class="row g-0">
+              <div class="col-md-4">
+                <img src="{{doctor.user.profile.image.url}}" class="img-fluid rounded-start object-fit-cover" style="height: 100%;" alt="...">
+              </div>
+              <div class="col-md-8">
+                <div class="card-header fs-4 fw-bold text-center">Dr. {{doctor.user.username}}</div>
+                <div class="card-body d-flex flex-column gap-3">
+                  <div>Speciality : <span class="fw-bold text-primary">{{doctor.speciality}}</span> </div>
+                  <div>Experience : <span class="fw-bold text-warning">{{doctor.experience}} years</span> </div>
+                  <div>Location : <span class="fw-bold text-danger">{{doctor.location}}</span> </div>
+                  <div>Phone : <span class="fw-bold text-info">{{doctor.phone}}</span> </div>
+                  <div>Email : <span class="fw-bold text-success">{{doctor.user.email}}</span> </div>
+                  <div class="url-btns">
+                      <a href="{% url 'appointment' %}" class="btn btn-sm btn-danger">Back To Appointments</a>
+                      <a href="{% url 'home' %}" class="btn btn-sm btn-success">Back To Home</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>
+    </div>
+{% endblock base %}
+    

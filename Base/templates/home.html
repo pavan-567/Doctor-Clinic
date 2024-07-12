@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+ {% load static %}
+  {% block css %}
+<link rel="stylesheet" href="{% static 'css/home.css' %}" />
+{% endblock css %} 
+{% block base %}
+<div class="flex-grow-1" id="home">
+  <div id="header">
+    <div class="position-relative">
+      <img
+        src="{% static 'home/home-second.jpg' %}"
+        class="img-fluid object-fit-cover banner"
+        alt="..."
+      />
+      <div class="position-absolute center-content">
+        <div>
+          <div style="font-size: 100px">
+            Poly Clinic
+          </div>
+          <div class="fs-3 mb-3">Your Journey to Wellbeing Begins Here.</div>
+          <div>
+            <a href="{% url 'about' %}" class="btn btn-warning btn-lg">Know More</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="home-content" class="my-5">
+    <div class="container">
+      <div class="row">
+        <div class="col">
+          <h1 class="text-center mb-5" style="letter-spacing: 5px; text-decoration-style: double; text-decoration-line: underline;"> Our Services </h1>
+        </div>
+        </div>
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 gap-2 justify-content-around">
+          <div class="col">
+            <div class="card" style="width: 28rem;">
+              <img src="https://palliativedoctors.org/uploads/starting-a-conversation/doctor-and-patient-medicine.jpg" class="card-img-top" alt="...">
+              <div class="card-body">
+                <h3 class="card-title">Medical Consultations & Treatments</h3>
+                <hr>
+                <p class="card-text">Our medical consultations offer a thorough evaluation of your health concerns, involving a detailed review of your medical history and a comprehensive examination. Treatment options may include medication, therapy, lifestyle changes, or specialist referrals, ensuring a holistic approach to your well-being and recovery.</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col">
+            <div class="card" style="width: 28rem;">
+              <img src="https://images.pexels.com/photos/8798925/pexels-photo-8798925.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" class="card-img-top" alt="...">
+              <div class="card-body">
+                <h3 class="card-title">Wound Care Management</h3>
+                <hr>
+                <p class="card-text">Our wound care management services are dedicated to promoting optimal healing and preventing complications. We provide specialized assessment and treatment for all types of wounds, including chronic and acute injuries. We are committed to delivering personalized care that enhances your recovery and overall health.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="col">
+            <div class="card" style="width:28rem;">
+              <img src="https://images.pexels.com/photos/4031321/pexels-photo-4031321.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" class="card-img-top" alt="...">
+              <div class="card-body">
+                <h3 class="card-title">Laboratory Tests & Medical Checkups</h3>
+                <hr>
+                <p class="card-text">Our laboratory tests and medical checkups provide a detailed assessment of your health through precise diagnostic testing and comprehensive evaluations. Combined with routine medical checkups, these services allow us to monitor your health, detect any issues early, and tailor preventative or therapeutic interventions to keep you in optimal condition.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="col">
+            <div class="card" style="width:28rem;">
+              <img src="https://www.nih.gov/sites/default/files/styles/floated_media_breakpoint-large/public/news-events/research-matters/2021/20210824-vaccine.jpg?itok=6gJiI3BX&timestamp=1629741808" class="card-img-top" alt="...">
+              <div class="card-body">
+                <h3 class="card-title">Vaccination For Children & Adults</h3>
+                <hr>
+                <p class="card-text">Our vaccination services cater to the immunization needs of both children and adults, providing essential protection against a range of preventable diseases. Our dedicated team ensures that every vaccination is administered safely and effectively, following the latest guidelines to keep you and your family healthy.</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock base %} 
+{% block script %}
+<script src="{% static 'js/home.js' %}"></script>
+{% endblock script %}

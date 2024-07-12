@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Appts</title>
+    
+    <style>
+      body {
+        display: flex;
+        min-height: 100dvh;
+        border: 1px solid black;
+        margin: 15px;
+      }
+      table, tr, td, th {
+        border: 1px solid black;
+        border-collapse: collapse;
+        padding: 5px;
+      }
+
+      #header_content {
+        text-align: center;
+        font-size: 25px;
+        font-weight: bold;
+      }
+
+
+      @page {
+        size: a4 portrait;
+        margin: 2cm;
+        @frame content_frame {
+          left: 50pt;
+            width: 512pt;
+            top: 50pt;
+            height: 692pt;
+            -pdf-frame-border: 1;  
+            padding: 2cm;
+        }
+      }
+
+    </style>
+  </head>
+  <body>
+    <div id="header_content">Appointment Confirmation Page</div>
+    <table style="margin: 50px 0;">
+      <tbody>
+        <tr>
+          <th>Doctor Name</th>
+          <td>
+            {{appointment.doctor.user.username}}
+          </td>
+        </tr>
+        <tr>
+          <th>Department</th>
+          <td>{{appointment.doctor.speciality}}</td>
+        </tr>
+        <tr>
+          <th>Appointment ID</th>
+          <td>{{appointment.id}}</td>
+        </tr>
+        <tr>
+          <th>Patient ID</th>
+          <td>{{appointment.user.id}}</td>
+        </tr>
+        <tr>
+          <th>Patient Name</th>
+          <td>{{appointment.patientName|capfirst}}</td>
+        </tr>
+        <tr>
+          <th>Patient Age</th>
+          <td>{{appointment.patientAge}}</td>
+        </tr>
+        <tr>
+          <th>Patient Gender</th>
+          <td>{{appointment.patientGender}}</td>
+        </tr>
+        <tr>
+          <th>Scheduled Date </th>
+          <td>{{appointment.date}}</td>
+        </tr>
+        <tr>
+
+          <th>Scheduled Time</th>
+          <td>{{appointment.time}}</td>
+        </tr>
+        <tr>
+          <th>Consult Status</th>
+          <td>{{appointment.consultStatus|capfirst}}</td>
+        </tr>
+        <tr>
+          <th>Patient Mobile Number</th>
+          <td>{{appointment.phone}}</td>
+        </tr>
+      </tbody>
+    </table>
+    <!-- <div class="info-body" style="display: flex;"> 
+      <div class="row">
+        <div>
+          Doctor Name : <span class="fw-bold">
+            {{appointment.doctor.user.username}}
+          </span> 
+        </div>
+        <div>
+          Department : <span class="fw-bold">{{appointment.doctor.speciality}}</span>
+        </div>
+      </div>
+      <div class="row">
+        <div>Appointment Id : {{appointment.id}}</div>
+        <div>Date : {{appointment.date}}</div>
+        <div>Time : {{appointment.time}}</div>
+      </div>
+      <div class="row">
+        <div>Patient Id : {{appointment.user.id}}</div>
+        <div>Patient Name : {{appointment.patientName}}</div>
+      </div>
+    </div> -->
+  </body>
+</html>

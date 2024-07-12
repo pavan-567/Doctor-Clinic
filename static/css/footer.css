@@ -1,0 +1,12 @@
+#footer {
+    background-color: rgba(255, 255, 255, .5);
+  }
+
+  #footer a {
+    text-decoration: none;
+    color: #000;
+  }
+
+  #footer a:hover {
+    color:burlywood;
+  }

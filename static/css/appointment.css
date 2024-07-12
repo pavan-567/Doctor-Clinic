@@ -1,0 +1,13 @@
+.filters-app {
+    width: 640px;
+
+    @media screen and (max-width: 768px) {
+        width: auto;
+
+        .btn-container {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+        }
+    }
+}

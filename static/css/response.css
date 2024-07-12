@@ -1,0 +1,6 @@
+#response .form-control, #response .form-control:focus {
+    background-color: rgba(0, 0, 0, 0.3);
+  }
+  #response .invalid-feedback {
+    font-weight: bold;
+  }

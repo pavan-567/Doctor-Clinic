@@ -1,0 +1,63 @@
+{% extends 'base.html' %} 
+
+{% block base %}
+
+{% load static %}
+<div class="d-flex flex-column align-items-center">
+  <div class="card mb-3 mt-5 overflow-hidden" style="max-width: 600px; box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px; min-height: 360px; background: rgba(255, 255, 255, 0.8);">
+    <div class="row g-0 flex-grow-1">
+      <div class="col-md-5">
+        <img src="
+          {% static 'auth/login.jpg' %}
+        " class="img-fluid rounded-start object-fit-cover" alt="..." style="height: 100%;">
+      </div>
+      <div class="col-md-7">
+        <div class="card-header fs-3 fw-bold text-center">USER LOGIN</div>
+        <div class="card-body" style="">
+          <form method="POST" novalidate>
+            {% csrf_token %}
+            <div class="mb-3">
+              <label for="username" class="form-label">Username</label>
+              <div class="input-group">
+                <span class="input-group-text">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
+                    <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
+                  </svg>
+                </span>
+                <input type="text" id="username" placeholder="Enter Username" name="username" class="form-control" required>
+                <div class="invalid-feedback">Enter Username</div>
+              </div>
+            </div>
+            <div class="mb-4">
+              <label for="password" class="form-label">Password</label>
+              <div class="input-group">
+                <span class="input-group-text">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-lock-fill" viewBox="0 0 16 16">
+                    <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2m3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2"/>
+                  </svg>
+                </span>
+                <input type="password" id="password" required placeholder="Enter Password" name="password" class="form-control" required>
+                <div class="invalid-feedback">Enter Correct Password</div>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-danger">Submit</button>
+          </form>
+        </div>
+        <div class="mb-2 mx-3">New User ? <a href="{% url 'register' %}">Register</a></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block script %}
+  <script>
+    const form = document.querySelector("form");
+      form.addEventListener('submit', function (e) {
+        if(!form.checkValidity()) // Browser Function Which Checks If Form Is Valid
+          e.preventDefault()
+        form.classList.add('was-validated')
+      })
+  </script>
+{% endblock script %}

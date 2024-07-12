@@ -1,0 +1,162 @@
+{% extends 'base.html' %} 
+{% load static %} 
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/profile.css' %}">
+{% endblock css %}
+
+{% block base %}
+<div class="d-flex justify-content-center my-3">
+   <div class="card mt-5" style="width: 50rem">
+      <div class="card-header text-center fs-2 fw-bold">User Profile</div>
+      <div class="card-body">
+         <div class="d-flex flex-column align-items-center gap-1">
+            <img src="{{request.user.profile.image.url}}" width="180" height="180"
+               class="object-fit-cover shadow-lg rounded-circle" alt="" />
+            <div class="fs-3 fw-bold">
+               {{request.user.first_name|capfirst}} {{request.user.last_name}}
+            </div>
+            <div class="fs-4">@{{user.username|capfirst}}
+               {% if request.user.profile.role == 'doctor' %}
+               {% if request.user.profile.gender == 'male' %}
+               <img src="{% static 'doctor_male_icon.png' %}" width="30" height="30" alt="">
+               {% else %}
+               <img src="{% static 'doctor_female_icon.png' %}" width="30" height="30" alt="">
+               {% endif %}
+               {% endif %}
+            </div>
+            <div class="mt-3 row gap-3" id="profile-options">
+               <div class="col-md-5">
+                  <button class="btn btn-success btn-sm w-100" data-bs-toggle="modal" data-bs-target="#details">Profile</button>
+               </div>
+               <div class="col-md-5 flex-grow-1">
+                  <button class="btn btn-danger btn-sm w-100 flex-grow-1" data-bs-toggle="modal" data-bs-target="#userPass">Password Settings</button>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="details" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+   aria-labelledby="staticBackdropLabel" aria-hidden="true">
+   <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h1 class="modal-title fs-5" id="staticBackdropLabel">Profile Details</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+         </div>
+         <form action="#" method="POST" novalidate enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="modal-body">
+               <div class="row">
+                  <div class="col-5 d-flex flex-column align-items-center gap-2">
+                     <img src="{{user.profile.image.url}}" width="150" height="150" class="shadow-lg rounded object-fit-cover" alt="">
+                     <div class="fs-5 fw-bold">Edit Picture</div>
+                     <input type="file" name="profile-pic" class="form-control" />
+                  </div>
+                  <div class="col-7">
+                     <div class="form-floating mb-3">
+                        <input type="text" name="username" class="form-control" id="floatingUser" placeholder="name"
+                           value="{{user.username}}" required>
+                        <label for="floatingUser">Username</label>
+                        <div class="invalid-feedback">Enter username</div>
+                     </div>
+                     <div class="form-floating mb-3">
+                        <input type="text" name="email" class="form-control" id="floatingEmail" placeholder="name@example.com"
+                           value="{{user.email}}" required>
+                        <label for="floatingEmail">Email</label>
+                        <div class="invalid-feedback">Enter correct email</div>
+                     </div>
+                     <div class="form-floating mb-3">
+                        <input type="text" name="first_name" class="form-control" id="floatingFname" value="{{user.first_name}}"
+                           placeholder="f_name" required>
+                        <label for="floatingFname">First Name</label>
+                        <div class="invalid-feedback">Enter first name</div>
+                     </div>
+                     <div class="form-floating mb-3">
+                        <input type="text" name="last_name" class="form-control" id="floatingLname" value="{{user.last_name}}"
+                           placeholder="l_name" required>
+                        <label for="floatingLname">Last Name</label>
+                        <div class="invalid-feedback">Enter username</div>
+                     </div>
+                     <div class="form-floating mb-3">
+                        <select class="form-select" name="gender" id="floatingSelect"
+                           aria-label="Floating label select example">
+                           <option value="male" 
+                           {% if user.profile.gender == 'male' %}
+                             selected
+                           {% endif %}
+                             >Male</option>
+                           <option value="female" {% if user.profile.gender == 'female' %}
+                           selected
+                         {% endif %}>Female</option>
+                           <option value="other" {% if user.profile.gender == 'other' %}
+                           selected
+                         {% endif %}>Other</option>
+                        </select>
+                        <label for="floatingSelect">Gender</label>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <div class="modal-footer">
+               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+               <button class="btn btn-primary" type="submit">Update</button>
+            </div>
+         </form>
+      </div>
+   </div>
+</div>
+
+<div class="modal fade" id="userPass" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">Change Password</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form action="{% url 'update-password' %}" method="POST" novalidate>
+        {% csrf_token %}
+        <div class="modal-body">
+          <div class="form-floating mb-3">
+            <input name="pass-old" type="password" class="form-control" id="floatingPassword1" placeholder="Password" required />
+            <label for="floatingPassword1">Old Password</label>
+            <div class="invalid-feedback">Enter Password</div>
+          </div>
+          <div class="form-floating mb-3">
+            <input name="pass-new" type="password" class="form-control" id="floatingPassword2" placeholder="Password" required />
+            <label for="floatingPassword2">New Password</label>
+            <div class="invalid-feedback">Enter New Password</div>
+          </div>
+          <div class="form-floating mb-1">
+            <input name="pass-cnf" type="password" class="form-control" id="floatingPassword3" placeholder="Password" required />
+            <label for="floatingPassword3">Confirm Password</label>
+            <div class="invalid-feedback">Enter Same New Password</div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Submit Password</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock base %}
+
+
+
+{% block script %}
+    <script>
+      const forms = document.querySelectorAll("form");
+      for(let form of forms) {
+        form.addEventListener('submit', function (e) {
+          if(!form.checkValidity()) // Browser Function Which Checks If Form Is Valid
+            e.preventDefault()
+          form.classList.add('was-validated')
+        })
+      }
+    </script>
+  {% endblock script %}

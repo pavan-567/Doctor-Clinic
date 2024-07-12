@@ -1,0 +1,280 @@
+{% extends 'base.html' %}
+{% block base %} 
+{% load static %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/appointment.css' %}">
+{% endblock css %}
+
+
+<div class="d-flex flex-column align-items-center">
+  
+  {% if not user.is_authenticated %}
+    <div class="alert alert-danger mt-3" role="alert">
+      Please Login / Register To Book Appointment
+    </div>
+  {% endif %}
+
+
+    
+    
+  <div class="fs-2 fw-bold my-4">Book Appointment With The Best Avaiable Doctors</div>
+  <div class="mb-3 filters-app"> 
+    <div class="row"> 
+      <div class="col-md-6 btn-container">
+        <div class="btn-group">
+          <button type="button" class="btn btn-info dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+            Filter Specialities
+          </button>
+          <ul class="dropdown-menu">
+            {% for category in categories %}
+              <li><a class="dropdown-item" href="{% url 'appointment'%}?category={{category.0}}">{{category.0}}</a></li>
+            {% endfor %}
+              
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="{% url 'appointment' %}">All</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <form action="" method="GET" novalidate>
+          <div class="input-group mb-3">
+            <a href="{% url 'appointment' %}" class="input-group-text">X</a>
+            <input type="text" class="form-control" placeholder="Search..." aria-label="Username" name="search"  value="{{search}}" aria-describedby="basic-addon1" required>
+            <input type="submit" class="input-group-text" id="basic-addon1" />
+          </div>
+        </form>
+      </div>
+    </div>
+ 
+  </div>
+
+  {% if doctors|length == 0 %}
+    <div class="alert alert-warning mt-3" role="alert">
+      No Doctors Found
+    </div>
+  {% endif %}
+
+  {% for doctor in doctors %}
+  <div class="card mb-3" style="max-width: 640px; box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;">
+    <div class="row g-0">
+      <div class="col-md-4">
+        <img
+          src="{{doctor.user.profile.image.url}}"
+          class="img-fluid object-fit-cover rounded-start"
+          style="height: 100%"
+          alt="..."
+        />
+      </div>
+      <div class="col-md-8">
+        <div class="card-body">
+          <div class="card-title m-0 d-flex justify-content-between align-items-center">
+            <div>
+              Dr.<span class="fw-bold">{{doctor.user.username}}
+              </span> 
+            </div>
+            <a style="cursor: pointer;" href="{% url 'doctor-profile' doctor.id %}">
+              <svg  xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-person-square" viewBox="0 0 16 16">
+              <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
+              <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm12 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1v-1c0-1-1-4-6-4s-6 3-6 4v1a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1z"/>
+            </svg>
+          </a> 
+        </div>
+          <small class="text-body-secondary fst-italic">{{doctor.speciality}}</small>
+          <p class="card-text mt-3">
+            Dr.<span class="fw-bold">{{doctor.user.username}}</span>  is a dedicated and compassionate
+            physician specializing in Medical Field, with over <span class="fw-bold">{{doctor.experience}} years</span> of
+            experience in providing comprehensive medical care. Known for a
+            patient-centered approach, Dr. {{doctor.user.username}} is
+            committed to improving health outcomes and delivering high-quality
+            treatment to all patients.
+          </p>
+          <div class="card-text">
+
+            <!-- Button trigger modal -->
+            
+            {% if user.is_authenticated %}
+            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModal-{{doctor.id}}">
+              Request Appointment
+            </button>
+            {% endif %}
+              
+
+            <div class="modal fade" id="exampleModal-{{doctor.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Request Appointment</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <form method="POST" novalidate>
+                    <div class="modal-body">
+                      <!-- Form -->
+                        {% csrf_token %}
+                        <input type="hidden" name="doctor-select" value={{doctor.id}} id="">
+                        <div class="mb-3">
+                          <label class="form-label" for="inpName">Patient's Name</label>
+                          <input type="text" id="inpName" name="patient-name" class="form-control" required placeholder="Enter Name">
+                          <div class="invalid-feedback">Enter Name</div>
+                          <div class="valid-feedback">Correct</div>
+                        </div>
+                        <div class="mb-3">
+                          <label class="form-label" for="inpNum">Patient's Email</label>
+                          <input type="text" name="patient-email" class="form-control" id="inpNum" placeholder="Enter Email" required />
+                          <div class="invalid-feedback">Invalid Email</div>
+                          <div class="valid-feedback">Correct Mail</div>
+                        </div>
+                        <div class="row">
+                          <div class="col-md-6">
+                            <div class="mb-3">
+                              <label class="form-label" for="height">Patient's Height</label>
+                              <input type="number" step="0.01" name="height" id="height" class="form-control" required placeholder="Enter Patient Height" />
+                              <div class="invalid-feedback">Invalid Height</div>
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="mb-3">
+                              <label class="form-label" for="weight">Patient's Weight</label>
+                              <input type="number" step="0.01" name="weight" id="weight" class="form-control" required  placeholder="Enter Patient Weight"/>
+                              <div class="invalid-feedback">Invalid Weight</div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-md-6">
+                            <div class="mb-3">
+                              <label for="age" class="form-label">Patient's Age</label>
+                              <input type="number" name="age" id="age" class="form-control" required placeholder="Enter Patient Age">
+                            </div>    
+                          </div>
+                          <div class="col-md-6">
+                            <div class="mb-3">
+                              <label for="gender" class="form-label">Patient's Gender</label>
+                              <select name="gender" id="gender" class="form-select">
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                                <option value="other">Other</option>
+                              </select>
+                              <div class="invalid-feedback">Select One Of The Option</div>
+                            </div>    
+                          </div>
+                        </div>
+                        <div class="mb-3">
+                          <label for="prob" class="form-label">Patient's Problem</label>
+                          <input type="text" name="problem" class="form-control" id="prob" placeholder="Enter Your Problem" required/>
+                          <div class="invalid-feedback">Field Cannot Be Blank</div>
+                        </div>
+                        <div class="row">
+                          <div class="col-md-6">
+                            <div class="mb-3">
+                              <label for="loc" class="form-label">Patient's Location</label>
+                              <input type="text" name="location" class="form-control" id="loc" placeholder="Enter Your Location" required />
+                              <div class="invalid-feedback">Field Cannot Be Blank</div>
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="mb-3">
+                              <label for="city" class="form-label">Patient's City</label>
+                              <input type="text" name="city" class="form-control" id="city" placeholder="Enter City" required />
+                              <div class="invalid-feedback">Field Cannot Be Blank</div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-md-6">
+                            <div class="mb-3">
+                              <label for="state" class="form-label">Patient's State</label>
+                              <input type="text" name="state" class="form-control" id="state" placeholder="Enter State" required />
+                              <div class="invalid-feedback">Field Cannot Be Blank</div>
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="mb-3">
+                              <label for="code" class="form-label">Patient's Postal Code</label>
+                              <input type="text" name="code" class="form-control" id="code" placeholder="Enter Zip Code" required />
+                              <div class="invalid-feedback">Field Cannot Be Blank</div>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <div class="row">
+                          <div class="col-md-6">
+                            <div class="mb-3">
+                              <label for="phone" class="form-label">Phone No.</label>
+                              <input type="number" name="phone" id="phone" class="form-control" placeholder="Enter Mobile Number" required />
+                              <div class="invalid-feedback">Phone No. Cannot Be Empty</div>
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="mb-3">
+                              <label class="form-label">Consult Options</label>
+                              <div class="form-check">
+                                <input class="form-check-input" type="radio" id="flexRadioDefault1" name="consult" value="home" required>
+                                <label class="form-check-label" for="flexRadioDefault1">
+                                  Consult Through Home
+                                </label>
+                              </div>
+                              <div class="form-check">
+                                <input class="form-check-input" type="radio" value="hospital" id="flexRadioDefault2" name="consult" checked required>
+                                <label class="form-check-label" for="flexRadioDefault2">
+                                  Consult In Hospital
+                                </label>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        
+
+                        <div class="row">
+                          <div class="col-md-6">
+                            <div class="mb-3">
+                              <label for="inpDate" class="form-label">Appointment Date</label>
+                              <input type="date" name="appointment-date" class="form-control" id="inpDate" required >
+                              <div class="invalid-feedback">Select The Date</div>
+                              <div class="valid-feedback">Correct</div>
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="mb-3">
+                              <label for="inpTime" class="form-label">Time</label>
+                              <input type="time" name="appointment-time" class="form-control" id="inpTime" required>
+                              <div class="invalid-feedback">Select The Time</div>
+                              <div class="valid-feedback">Correct</div>
+                            </div>
+                          </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                      <button class="btn btn-primary">Submit</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+
+{% endblock base %}
+
+
+{% block script %}
+  <script>
+    const forms = document.querySelectorAll("form");
+
+    for(let form of forms) {
+      form.addEventListener('submit', function (e) {
+        if(!form.checkValidity()) // Browser Function Which Checks If Form Is Valid
+          e.preventDefault()
+        form.classList.add('was-validated')
+      })
+    }
+  </script>
+{% endblock script %}
+  

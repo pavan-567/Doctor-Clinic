@@ -1,0 +1,177 @@
+{% extends 'base.html' %}
+
+
+{% block base %}
+<div class="d-flex flex-column align-items-center">
+    <div class="fs-2 fw-bold my-3">Scheduled Appointments</div>
+    
+    {% if appointments|length == 0 %}
+      <div class="text-center">No Scheduled Appointments</div>
+    {% endif %}
+      
+    {% for appointment in appointments %}
+        <div class="card mb-3 mt-1" style="max-width: 800px;">
+            <div class="row g-0">
+              <div class="col-md-4">
+                <img src="{{appointment.user.profile.image.url}}" style="height: 100%;" class="img-fluid rounded-start object-fit-cover" alt="...">
+              </div>
+              <div class="col-md-8">
+                <div class="card-body">
+                  <h5 class="card-title">Scheduled Appointment From User <span class="fw-bold">{{appointment.user.username|capfirst}}</span></h5>
+                  <hr>
+                  <div class="card-text">
+                    <div class="mb-3">Patient Name : <span class="fw-bold">{{appointment.patientName|capfirst}}</span></div>
+                    <div class="mb-3">Appointment Date : <span class="fw-bold">
+                      {{appointment.date|date:"F dS Y"}} at {{appointment.time|time:"g:i A"}}
+                    </span>
+                    </div>
+                    <div class="mb-3">
+                        Appointment Status : 
+                        {% if appointment.status == 'pending' %}
+                            <span class="badge text-bg-danger">Pending</span>
+                            {% elif appointment.status == 'processing' %}
+                            <span class="badge text-bg-warning">Processing</span>
+                            {% else %}
+                            <span class="badge text-bg-success">Completed</span>
+                        {% endif %}   
+                        </div>
+                        <div class="mb-3">
+                          Appointment Confirmation :
+                        {% if appointment.patientApproved == 'accept' %}
+                          <span class="fw-bold text-success">Approved</span>
+                        {% elif appointment.patientApproved == 'pending' %}
+                          <span class="fw-bold text-warning">Pending</span>
+                        {% else %}
+                          <span class="fw-bold text-danger">Rejected</span>
+                        {% endif %}
+                        </div>
+                        <div class="mb-3">
+                          Consulting at : <span class="fw-bold">{{appointment.consultStatus|capfirst}}</span>
+                        </div>
+                        <div class="mb-3">
+                          Payment Status : 
+                          
+                          {% if appointment.bill.payBill %}
+                            <span class="fw-bold text-success">The payment was made successfully.</span>
+                            {% else %}
+                            <span class="fst-italic text-danger">Payment Due</span>
+                          {% endif %}
+                            
+                        </div>
+                        <div class="mb-1 d-flex align-items-center gap-3">
+                          
+                          {% if appointment.patientApproved == 'accept' %}
+                            <a href="{% url 'bill' appointment.bill.slug %}" class="btn btn-info btn-sm">Update Bill</a>
+                          {% endif %}
+                            
+                          <!-- Button trigger modal -->
+                          <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal-{{appointment.id}}">
+                            Review Appointment
+                          </button>
+                        </div>
+  
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal-{{appointment.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel-{{appointment.id}}">Appointment Check</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form action="" method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="doctor-appointment" value={{appointment.id}} />
+            <div class="modal-body">
+                    <!-- <div class="mb-3">Patient Name : <span class="fw-bold text-primary">{{appointment.patientName}}</span></div>
+                    <div class="mb-3">Patient Email : <span class="fw-bold text-primary">{{appointment.patientEmail}}</span></div>
+                    <div class="mb-3">Current Status : <span class="fw-bold text-primary">{{appointment.status}}</span></div>
+                    <div>
+                        <label for="status">Modify Status : </label>
+                        <select  class="form-select form-select-sm mt-1" name="status" value={{appointment.status}} required>
+                            <option value="pending" {% if appointment.status == 'pending'%} selected {% endif %}>Pending</option>
+                            <option value="processing" {% if appointment.status == 'processing'%} selected {% endif %}>Processing</option>
+                            <option value="completed" {% if appointment.status == 'completed'%} selected {% endif %}>Completed</option>
+                        </select>
+                    </div> -->
+                    <table class="table table-hover table-bordered">
+                      <thead>
+                        <tr>
+                          <th colspan="2" class="fw-bold text-center fs-5 text-uppercase">Patient Details</th>
+                        </tr>
+                      </thead>
+                      <tbody class="table-group-divider">
+                        <tr>
+                          <th>Patient Name</th>
+                          <td>{{appointment.patientName}}</td>
+                        </tr>
+                        <tr>
+                          <th>Patient Email</th>
+                          <td>{{appointment.patientEmail}}</td>
+                        </tr>
+                        <tr>
+                          <th>Appointment Status</th>
+                          <td class="fw-bold 
+                          {% if appointment.status == 'pending' %}
+                            text-danger
+                          {% elif appointment.status == 'processing' %}
+                            text-warning
+                          {% else %}
+                            text-success
+                          {% endif %}
+                             ">{{appointment.status}}</td>
+                        </tr>
+                        <tr>
+                          <th>Modify Status</th>
+                          <td>
+                            <select  class="form-select form-select-sm mt-1" name="status" value={{appointment.status}} required>
+                              <option value="pending" {% if appointment.status == 'pending'%} selected {% endif %}>Pending</option>
+                              <option value="processing" {% if appointment.status == 'processing'%} selected {% endif %}>Processing</option>
+                              <option value="completed" {% if appointment.status == 'completed'%} selected {% endif %}>Completed</option>
+                          </select>
+                          </td>
+                        </tr>
+                        <tr>
+                          <th>Appointment Confirmation</th>
+                          <td>
+                            <select {% if appointment.bill.payBill or appointment.patientApproved == 'accept' %}
+                              disabled
+                            {% endif %}
+                                class="form-select form-select-sm mt-1" name="confirmation" value={{appointment.patientApproved}} required>
+                              <option value="pending" {% if appointment.patientApproved == 'pending'%} selected {% endif %}>Pending</option>
+                              <option value="accept" {% if appointment.patientApproved == 'accept'%} selected {% endif %}>Accept</option>
+                              <option value="reject" {% if appointment.patientApproved == 'reject'%} selected {% endif %}>Reject</option>
+                          </select>
+                          <span class="form-text" style="font-size: 12px;">Field cannot be edited once Approved</span>
+                          </td>
+                        </tr>
+                        <tr>
+                          <th>Consult Status</th>
+                          <td class="fw-bold">{{appointment.consultStatus|capfirst}}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button  type="submit" class="btn btn-primary">Save changes</button>
+            </div>
+        </form>
+      </div>
+    </div>
+  </div>
+                        <!--  -->
+
+
+                  </div>
+                  <div class="mt-3 mb-0"><small class="text-body-secondary">Booked Date : {{appointment.created_at|date:"l F dS Y"}} at {{appointment.created_at|time:"g:i A"}}</small></div>
+                </div>
+              </div>
+            </div>
+          </div>
+    {% endfor %}
+</div>
+{% endblock base %}
+    
+
+
+  

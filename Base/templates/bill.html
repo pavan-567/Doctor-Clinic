@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% block base %}
+    <div class="mt-5 d-flex justify-content-center">
+        {% if request.user.profile.role == 'doctor' %}    
+                <div class="card mb-3" style="max-width: 830px;">
+                    <div class="row g-0">
+                        <div class="card-header fw-bold text-center fs-4">Update Bill Details</div>
+                    <div class="col-md-5">
+                        <img src="{% static 'bill/bill.jpg' %}" class="img-fluid h-100 object-fit-cover rounded-start" alt="...">
+                    </div>
+                    <div class="col-md-7">
+                        <div class="card-body">
+                        <div class="card-text">
+                            <form action="" method="post" novalidate>
+                                {% csrf_token %}
+                                <div class="mb-3">
+                                    <label for="total" class="form-label">Total Bill</label>
+                                    <input type="number" name="total" id="total" class="form-control" 
+                                    value="{% if bill.totalBill > 0 %}{{bill.totalBill}}{% endif %}" 
+                                    {% if bill.totalBill > 0 %}
+                                        disabled
+                                    {% endif %}
+                                         required>
+                                    <div class="form-text">Warning! You Cannot Change The Bill Once It's Fixed!</div>
+                                    <div class="invalid-feedback">Invalid Bill Number</div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="desc">Description</label>
+                                    <textarea name="description" id="desc" class="form-control" 
+                                    style="resize: none;"
+                                    rows="10"
+                                    required>{{bill.billDescription}}</textarea>
+                                    <div class="form-text">Description Can Be Updated Anytime!</div>
+                                    <div class="invalid-feedback">Description Cannot Be Empty</div>
+                                </div>
+                                <div class="mb-1 d-flex align-items-center gap-3">
+                                        <a href="{% url 'doctor-appointments' %}" class="btn btn-danger btn-sm">Go Back</a>
+                                    <button type="submit" class="btn btn-warning btn-sm">Submit</button>
+                                </div>
+                            </form>
+                        </div>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+        {% else %}
+        <div class="card mb-3" style="max-width: 830px;">
+            <div class="row g-0">
+                <div class="card-header fs-4 fw-bold text-center">User Bill Details</div>
+            <div class="col-md-5">
+                <img src="{% static 'bill/bill.jpg' %}" class="img-fluid h-100 object-fit-cover rounded-start" alt="...">
+            </div>
+            <div class="col-md-7">
+                <div class="card-body">
+                <div class="card-text">
+                        <div class="mb-3">
+                            <label for="strp-id">Payment ID</label>
+                            <input type="text" name="stripeId" id="strp-id" value="{{bill.stripeId}}"  class="form-control" disabled>
+                        </div>
+                        <div class="mb-3">
+                            <label for="total" class="form-label">Total Bill</label>
+                            <input type="number" name="total" id="total" class="form-control" 
+                            value="{{bill.totalBill}}" disabled>
+                        </div>
+                        <div class="mb-3">
+                            <label for="desc">Description</label>
+                            <textarea name="description" id="desc" class="form-control" 
+                            style="resize: none;"
+                            rows="10"
+                            disabled
+                            required>{{bill.billDescription}}</textarea>
+                        </div>
+                        <div class="mb-3">
+                            <a href="{% url 'bookings' %}" class="btn btn-danger btn-sm">Go Back</a>
+                        </div>
+                </div>
+                </div>
+            </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+{% endblock base %}
+    
+
+
+{% block script %}
+  <script>
+    const form = document.querySelector("form");
+      form.addEventListener('submit', function (e) {
+        if(!form.checkValidity()) // Browser Function Which Checks If Form Is Valid
+          e.preventDefault()
+        form.classList.add('was-validated')
+      })
+  </script>
+{% endblock script %}

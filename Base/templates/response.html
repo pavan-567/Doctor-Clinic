@@ -1,0 +1,137 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/response.css' %}">
+{% endblock css %}
+
+{% block base %}
+<div class="d-flex flex-column align-items-center mt-5">
+  <!-- <div class="card">
+    <div class="card-header fs-2 fw-bold text-center">
+      {% if mode == 'contact' %}
+        Contact 
+        {% else %}
+        Feedback
+      {% endif %} Form        
+    </div>
+    <div class="card-body">
+      <form method="POST" novalidate>
+        {% csrf_token %}
+        <div class="mb-3 form-floating">
+          <input type="text" class="form-control" name="name" id="name" required placeholder="Enter Name" />
+            <label for="name" class="floating-label">
+              Enter Name
+            </label>
+          <div class="invalid-feedback">Enter Name</div>
+        </div>
+          <div class="mb-3 form-floating">
+            <input type="email" class="form-control" name="email" id="mail" placeholder="Enter Email" required>
+            <label for="mail" class="floating-label">Email address</label>
+            <div class="invalid-feedback">Enter Email</div>
+          </div>
+          <div class="mb-3 form-floating">
+            <textarea class="form-control" name="message" id="msg" placeholder="Enter {% if mode == 'contact' %} Message {% else %} Feedback {% endif %}" rows="5" cols="200" style="width: 100%; height: 100%;" required></textarea> 
+            <label for="msg" class="form-label"> 
+              Your {% if mode == 'contact' %}
+                Message
+              {% else %}
+                Feedback
+              {% endif %}
+                
+            </label>
+            <div class="invalid-feedback">Enter your 
+            {% if mode == 'contact' %}
+              message
+              {% else %}
+              feedback
+            {% endif %}
+              </div>
+          </div>
+
+          <div class="d-flex">
+            <button type="submit" class="btn btn-primary flex-grow-1">Submit</button>
+          </div>
+      </form>
+    </div>
+  </div> -->
+  <div class="card mb-3 overflow-hidden" style="max-width: 700px;box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px; background: rgba(255, 255, 255, 0.8);">
+    <div class="row g-0">
+      <div class="col-md-5">
+        <img src="
+          
+          {% if mode == 'contact' %}
+                {% static 'response/contact.jpg' %}
+              {% else %}
+                {% static 'response/feedback.jpg' %}
+          {% endif %}
+            
+        " class="img-fluid rounded-start object-fit-cover" alt="..." style="height: 100%;">
+      </div>
+      <div class="col-md-7">
+        <div class="card-header fs-3 fw-bold text-center">
+          {% if mode == 'contact' %}
+            Contact 
+            {% else %}
+            Feedback
+          {% endif %} Form        
+        </div>
+        <div class="card-body">
+          <form action="" method="post" novalidate>
+            {% csrf_token %}
+              <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label">Name</label>
+                <input type="text" class="form-control" id="name" required placeholder="Enter Name" name="name">
+                <div class="invalid-feedback">Enter Name</div>
+              </div>
+              <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" name="email" placeholder="Enter Email" id="email" required>
+                <div class="invalid-feedback">Enter Email</div>
+              </div>
+              <div class="mb-3">
+                <label for="msg" class="form-label">
+                  Your 
+                  {% if mode == 'contact' %}
+                      Message
+                      {% else %}
+                        Feedback
+                  {% endif %}
+                    
+                </label>
+                <textarea class="form-control" name="message" id="msg" placeholder="Enter {% if mode == 'contact' %} Message {% else %} Feedback {% endif %}" rows="5" cols="200" style="width: 100%; height: 100%;" required></textarea> 
+                <div class="invalid-feedback">Enter your 
+                  {% if mode == 'contact' %}
+                    message
+                    {% else %}
+                    feedback
+                  {% endif %}
+                    </div>
+              </div>
+              <div class="mb-3">
+                <button type="submit" class="btn btn-primary">Submit</button>
+              </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock base %}
+    
+{% block script %}
+  <script>
+    const form = document.querySelector("form");
+      form.addEventListener('submit', function (e) {
+        if(!form.checkValidity())
+          e.preventDefault()
+        form.classList.add('was-validated')
+      })
+
+      // const body = document.querySelector("body");
+      // body.background = "/static/background/contact.jpg";
+      // body.classList.add('contact-background');
+  </script>
+{% endblock script %}

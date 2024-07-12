@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+
+{% block base %}
+<div class="d-flex flex-column align-items-center">
+    <div class="fs-2 fw-bold my-3">Your Booked Appointments</div>
+    
+    {% if bookings|length < 1 %}
+      <div>No Booked Appointments!</div>
+      {% else %}
+      <a href="{% url 'appointments-excel' %}" class="btn btn-danger mb-2">Download Excel Copy</a>  
+    {% for booking in bookings %}
+        <div class="card mb-3 mt-1 overflow-hidden" style="max-width: 800px;box-shadow: rgba(0, 0, 0, 0.09) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px, rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px;">
+            <div class="row g-0">
+              <div class="col-md-4">
+                <img src="{{booking.doctor.user.profile.image.url}}" class="img-fluid rounded-start object-fit-cover" style="height: 100%;" alt="...">
+              </div>
+              <div class="col-md-8">
+                <div class="card-body">
+                  <h5 class="card-title">Appointment with <span class="fw-bold">Dr.{{booking.doctor.user.username|title}}</span></h5>
+                  <hr>
+                  <div class="card-text">
+                    <div class="mb-3">Patient Name : <span class="fw-bold">{{booking.patientName|capfirst}}</span></div>
+                    <div class="mb-3">Appointment Date : <span class="fw-bold">
+                      {{booking.date|date:"F dS Y"}} at {{booking.time|time:"g:i A"}}
+                    </span>
+                    </div>
+                    <div class="mb-3">
+                        Appointment Status : 
+                        {% if booking.status == 'pending' %}
+                            <span class="badge text-bg-danger">Pending</span>
+                          {% elif booking.status == 'processing' %}
+                            <span class="badge text-bg-warning">Processing</span>
+                          {% else %}
+                            <span class="badge text-bg-success">Completed</span>
+                        {% endif %}
+                            
+                    </div>
+                    <div class="mb-3">
+                      Consulting at : <span class="fw-bold">{{booking.consultStatus|capfirst}}</span>
+                    </div>
+                    <div class="mb-3">
+                      Appointment Confirmation : 
+                        {% if booking.patientApproved == 'accept' %}
+                          <span class="fw-bold text-success">Approved</span>
+                          
+                          {% if not booking.bill.payBill and booking.bill.totalBill > 0 %}
+                              <p class="fst-italic text-danger">Your Appointment Has Been Approved and Had To Pay Bill About <span class="fw-bold fst-normal text-dark">${{booking.bill.totalBill}}</span>.</p>
+                            {% elif booking.bill.totalBill > 0 %}
+                              <p class="fst-italic text-success">Your Bill Of <span class="fw-bold fst-normal text-dark">${{booking.bill.totalBill}}</span> Has Been Paid Successfully!</p>
+                          {% endif %}
+                        {% elif booking.patientApproved == 'pending' %}
+                          <span class="fw-bold text-warning">Pending</span>
+                        {% else %}
+                          <span class="fw-bold text-danger">Rejected</span>
+                        {% endif %}
+                    </div>
+                    <div class="mb-1 d-flex align-items-center gap-3">
+                      <a href="{% url 'pdf' booking.id %}" class="btn btn-warning btn-sm">Download PDF</a>
+                      
+                      
+                      {% if booking.patientApproved == 'accept' and booking.bill.totalBill > 0 %}
+                        <a href="{% url 'bill' booking.bill.slug %}" class="btn btn-secondary btn-sm">Bill Details</a>
+                      {% endif %}
+            
+                      {% if not booking.bill.payBill and booking.patientApproved == 'accept' and booking.bill.totalBill > 0 %}   
+                        <form action="" method="post">
+                          {% csrf_token %}  
+                          <input type="hidden" name="appointmentId" value="{{booking.id}}" />
+                          <button type="submit" class="btn btn-dark btn-sm">Pay Now</button>
+                        </form> 
+                      {% endif %}
+                    </div>
+                  </div>
+                  <div class="mt-3 mb-0"><small class="text-body-secondary">Booked Date : {{booking.created_at|date:"l F dS Y"}} at {{booking.created_at|time:"g:i A"}}</small></div>
+                </div>
+              </div>
+            </div>
+          </div>
+    {% endfor %}
+    {% endif %}
+    
+</div>
+{% endblock base %}
+    
